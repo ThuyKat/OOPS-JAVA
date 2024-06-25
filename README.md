@@ -197,7 +197,7 @@ public class Pig implements Animal, Animal2 {
 ```
 3. Using parent type reference, we cannot evoke a static method using the instance because static methods are resolved at compile time based on the reference type. For example animal.staticMethod() cannot be evoked, we have to use the class name of parent: Animal.staticMethod(). This is different to Pig pig = new Pig(), if Pig class has static method, we can use either pig or Pig to evoke that method. 
 
-4.  Interface VS abstract class vs concrete class
+##  Interface VS abstract class vs concrete class
 * Interface: can only extend interface(s). Able to provide (with default keyword) or not provide implementations for inherited abstract methods [ALLOW PARTIAL IMPLEMENTATION]
 * concrete class: can extend only one another class ( either abstract or concrete) and can implement interface(s). Concrete class have to provide implementation for all inherited abstract methods either from the parents class or interface(s)
 * abstract class: can only extend another abstract class, can implement interface(s). Different to concrete class, abstract class does not have to provide implementations for all the interface's methods or parent abstract class' methods.It can leave implementation of some or all of these methods to its subclasses [ALLOW PARTIAL IMPLEMENTATION]
