@@ -1,5 +1,5 @@
 # OOPS-JAVA
-# INHERITANCE, RUNTIME POLYMORPHISM, ASSOCIATION
+## INHERITANCE, RUNTIME POLYMORPHISM, ASSOCIATION
 1. When child class constructor is evoked, parents class constructor is automatically evoked
 
 For example, we have parent class named "Animal" : 
@@ -131,8 +131,8 @@ In contrast, since Professor only has aggregation relationship with Department, 
 Professor professor = new Professor("Micheal Thomas");
 	department.assign(professor);
 ```
-# NESTING CLASSES
-# INTERFACE
+## NESTING CLASSES
+## INTERFACE
 
 1. All methods in interface are public and abstract (without the need of declaring so)
 2. We wont be able to create an instance from interface, but we can use interface as a type reference, which allows runtime polymorphism. When you declare a variable with an interface type, you are saying that the variable can refer to any object that implements that interface. The actual object assigned to the variable will be an instance of a class that implements the interface
