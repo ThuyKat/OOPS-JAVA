@@ -1,5 +1,5 @@
 # OOPS-JAVA
-# INHERITANCE
+# INHERITANCE, RUNTIME POLYMORPHISM, ASSOCIATION
 1. When child class constructor is evoked, parents class constructor is automatically evoked
 
 For example, we have parent class named "Animal" : 
