@@ -55,11 +55,32 @@ This will return 2 statements, first one is ' This is default constructor of Ani
 
 2. animal object will not be able to evoke methods that are exist in Cat but not in Animal. In other words, it can only call methods that Cat inherits from Animal. For example: animal.pur() will throw an error
 
-3. animal object will call overriden inherited methods of Cat, not Animal. For example, both Animal and Cat has makeNoise() method, but animal.makeNoise will return "Meow's method". The method to be executed is determined at runtime based on the actual object's class. Object is a reference of type Animal, but it actually referes to an object of type Cat. The decidsion of which method to call is made during runtime, hence the term runtime polymorphism
+3. animal object will call overriden inherited methods of Cat, not Animal. For example, both Animal and Cat has makeNoise() method, but animal.makeNoise will return "Meow's method". The method to be executed is determined at runtime based on the actual object's class. Object is a reference of type Animal, but it actually referes to an object of type Cat. The decision of which method to call is made during **runtime**, hence the term **runtime polymorphism**
 
-4. animal object can access attributes declared in Animal,but not Cat. For example, animal.foodEaten will return "Parent's foodEaten" if foodEaten are there in both Cat and Animal. It wont be able to return value of attributes declared in Cat. 
+4. animal object can access attributes declared in Animal,but not Cat. For example, animal.foodEaten will return "Parent's foodEaten" if foodEaten are there in both Cat and Animal. It wont be able to return value of attributes declared in Cat. This is **Data Hiding** feature- internal presentation of an object is hidden -  when a subclass defines a variable with the same name as one in its superclass, the subclass' data contained in the variable is hidden. This happens because variable hiding does not support runtime polymorphism. It is a good practice to avoid variable hiding because it can lead to confusion and code hard to maintain. Using different names for variable in the subclass and superclass is recommended. 
 
-5. animal object is an example of runtime polymophism. Runtime polymorphism happens when we create an instance of Child class and store it in parent reference type. 
+***Data Hiding achieved by using access modifiers and abstractions are recommended***
+
+This is because: 
+* Encapsulation: access modifiers keep the state of the internal object safe from unintended harmful interference
+* Abstraction: expose only necs info and hide implement details. 
+
+5. animal object is an example of runtime polymophism. Runtime polymorphism happens when we create an instance of Child class and store it in parent reference type. In other words, runtime polymorphism  happens in Upcasting -when an instance of Child class and store it in parent reference type . Upcasting is a technique to achieve functional overriding - to run only the function which is overriden in child class. To run new function created in the child class, we can Downcasting the upcasted object
+
+***With upcasting, at runtime we can decide which behaviours to use***
+
+Example: 
+```java
+void abc ( Vehicle veh){
+	veh.drive();
+}
+
+// if we want the behaviour defined in parents class
+abc(new Vehicle());
+
+// if we want the behaviour defined in child class
+abc(new Car());
+```
 
 6. In order to make animal object return values of Cat's attributes instead of Animal, we have two options:
 * Use "super" keyword and re-declare the attributes of parents' class in child class (either inside or outside constructor of child class)
@@ -132,6 +153,88 @@ Professor professor = new Professor("Micheal Thomas");
 	department.assign(professor);
 ```
 ## NESTING CLASSES
+- Association is differnt to Nesting classes. Eventhough department can only be instantiated once university is instantiated via .createDepartment() method, Department entity lies outside of University entity. In contrast, the nesting classes have one class lies totally inside the other:
+```java
+public class NestingDemo {
+	static String nameOfNestingDemo;
+	String idOfNestingDemo;
+ public void print() {
+	 System.out.println("NestingDemo");
+ }
+ 
+ class InnerDemo{
+	 static String nameOfInnerDemo;
+	 String idOfInnerDemo;
+	 public void print() {
+		 System.out.println("InnerDemo");
+	 }
+	 public String accessOuterField() {
+		 return idOfNestingDemo;
+	 }
+	 public String accessOuterStaticField() {
+		 return nameOfNestingDemo;
+	 }
+ }
+ ```
+ - To create instance of InnerDemo:
+
+ STEP 1: create instance of NestingDemo : NestingDemo nestingDemo = new NestingDemo();
+
+ STEP 2: use the nestingDemo object to create instance of InnerDemo: NestingDemo.InnerDemo innerDemo = nestingDemo.new InnerDemo();
+
+ ```java
+ NestingDemo nestingDemo = new NestingDemo();
+	nestingDemo.print();
+	
+	/*create an instance of nested class named InnerDemo: using instance of NestingDemo
+	 * It requires an instance of the inner class to access its methods and attributes
+	 */
+	NestingDemo.InnerDemo innerDemo = nestingDemo.new InnerDemo();
+	
+	innerDemo.print();
+```
+- In Java, it does not allow an entire class to be declared as static.  However, you can declare static nested classes.
+
+```java
+public class NestingDemo {
+	static String nameOfNestingDemo;
+	String idOfNestingDemo;
+ public void print() {
+	 System.out.println("NestingDemo");
+ }
+ static class StaticInnerDemo{
+	 static String nameOfStaticInnerDemo;
+	 String idOfStaticInnerDemo;
+	 public void print() {
+		 System.out.println("StaticInnerDemo");
+	 }
+	 
+	 public static void staticPrint() {
+		 System.out.println("StaticInnerDemo.staticPrint()");
+	 }
+	 
+	 public String accessOuterField() {
+		 return nameOfNestingDemo;
+	 }
+ }
+}
+```
+- Difference between StaticInnerDemo and InnerDemo is that we dont need an instance of NestingDemo to call instance of StaticInnerDemo:
+```java
+/*In Java, it does not allow an entire class to be declared as static. 
+	 * However, you can declare static nested classes. 
+	 * It can access static members of the outer class 
+	 * Outer class can access static class' attributes and methods via the StaticInnerClass name
+	 */
+	//create an instance of nested static class: using class name of NestingDemo
+	NestingDemo.StaticInnerDemo staticInnerDemo = new NestingDemo.StaticInnerDemo();
+	
+	staticInnerDemo.print();
+```
+### When to use normal inner class and when tho use static inner class??
+- Static class cannot access the outer class' instance variables if they are not static variables ->  hence, we use normal inner class if we want to access non-static attributes of outer class
+- 
+
 ## INTERFACE
 
 1. All methods in interface are public and abstract (without the need of declaring so)
@@ -195,10 +298,15 @@ public class Pig implements Animal, Animal2 {
 
 }
 ```
-3. Using parent type reference, we cannot evoke a static method using the instance because static methods are resolved at compile time based on the reference type. For example animal.staticMethod() cannot be evoked, we have to use the class name of parent: Animal.staticMethod(). This is different to Pig pig = new Pig(), if Pig class has static method, we can use either pig or Pig to evoke that method. 
+3. Using parent type reference, we cannot evoke a static method using the instance because static methods are resolved at compile time based on the reference type, not at runtime based on the object type. For example animal.staticMethod() cannot be evoked, we have to use the class name of parent: Animal.staticMethod(). This is different to Pig pig = new Pig(), if Pig class has static method, we can use either pig or Pig to evoke that method. 
 
 ##  Interface VS abstract class vs concrete class
 * Interface: can only extend interface(s). Able to provide (with default keyword) or not provide implementations for inherited abstract methods [ALLOW PARTIAL IMPLEMENTATION]
 * concrete class: can extend only one another class ( either abstract or concrete) and can implement interface(s). Concrete class have to provide implementation for all inherited abstract methods either from the parents class or interface(s)
 * abstract class: can only extend another abstract class, can implement interface(s). Different to concrete class, abstract class does not have to provide implementations for all the interface's methods or parent abstract class' methods.It can leave implementation of some or all of these methods to its subclasses [ALLOW PARTIAL IMPLEMENTATION]
 
+## EXCEPTION HANDLING
+- Exception and Error are extension of Throwable class to handle to unexpected scenarios
+- Exception include checked exception ( forced to handle) and unchecked exception ( not forced to handle)
+- Checked Exception: are checked at compile time. Methods that possibly throw checked exceptions must declare them using the "throws" keyword in the method signature
+- Unchecked Exception[ Runtime exception ]: are not checked at compile time. Hence compiler does not require methods to declare them in the method signature. These exceptions are handled by try-catch blocks and throw in method body. Throw keyword is used to transfer control to the nearest enclosing catch block that can handle the specified exception
