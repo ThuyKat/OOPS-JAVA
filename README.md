@@ -310,3 +310,76 @@ public class Pig implements Animal, Animal2 {
 - Exception include checked exception ( forced to handle) and unchecked exception ( not forced to handle)
 - Checked Exception: are checked at compile time. Methods that possibly throw checked exceptions must declare them using the "throws" keyword in the method signature
 - Unchecked Exception[ Runtime exception ]: are not checked at compile time. Hence compiler does not require methods to declare them in the method signature. These exceptions are handled by try-catch blocks and throw in method body. Throw keyword is used to transfer control to the nearest enclosing catch block that can handle the specified exception
+
+## EQUAL AND HASHMAP
+
+- In Object class, == is used to compare addresses of 2 object in equal method
+
+--> it is used to compare primitives
+- In String class, Equal method is overriden so that 2 String objects will be compared by their values not addresses
+--> it is used to compare objects
+```java
+String a = new String("thuy");
+		String b = new String("thuy");
+		System.out.println(a==b); //false
+		System.out.println(a.equals(b)); //true
+```
+- Replicate the way Equal method overriding in String class, we can also override Equal method in other class. For example, we have a student class
+```java
+public class Student {
+
+	String name;
+
+	Integer rollNo;
+
+	public Student(String name, Integer rollNo) {
+		this.name = name;
+		this.rollNo = rollNo;
+	}
+}
+```
+And we want student to be compared by name and rollNo instead of memory addresses. Here we override the default equal method:
+```java
+@Override
+	public boolean equals(Object s) {
+		if (this == s) { // comparing with the same object
+			// == is defined by the Java compiler and the java runtime environment
+			return true;
+		}
+		if (!(s instanceof Student)) {
+			return false;
+		}
+
+		Student student = (Student) s;
+		if (this.name.equals((student.name)) && (this.rollNo == student.rollNo)) {
+			return true;
+		}
+		return false;
+	}
+```
+--> Note that:
+
+1. Object must be the same type to be compared
+2. Comparing same object will always return true 
+
+- When overriding equal(), we just change the way objects are compared in our application. However, in Java operation, for example, to decide the object's location in a HashMap or a HashSet, it will still use the objects' addresses by default in its calculation. 
+
+- Hence to make sure that objects are compared on a consistent basis across our application, we can implement custom hashcode() method
+
+- This means we compute the hashcode based on the values of the object's fields.This is to ensure that two objects with the same data ( equal accordig to equals()) have the same hashcode
+
+```java
+@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return this.name.hashCode() + this.rollNo.hashCode();
+	}
+```
+
+- Because HashCode is calculated, 2 unequal objects can still have the same hashcode. This is called **Collisions**
+
+--> RULE:
+1. When equals() return true, hashcode will always return true
+2. When hashcode() return true, equals() can be true or false due to collisions
+
+--> It is recommended that when equals() is overriden, hashcode also need to be overriden. Any change in equals() needs equivalent change in hashcode().
